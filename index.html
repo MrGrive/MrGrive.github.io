@@ -96,8 +96,9 @@
                     <p>Мы подготовили для вас карту, чтобы вы точно добрались и порадовали нас своим присутствием.</p>
                 </div>
                 <div class="maps">
-                    <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A888e2bb939808cf626080965f37f349ef9c4b802cc5324f3932b1578e13822c7&amp;width=100%&amp;height=398&amp;lang=ru_RU&amp;scroll=true"></script>                </div>
-            </section>
+                    <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A8cbe90fdb766f5bf9e18af65474e0f63b517677b7d497dccd66b88c074f4a4b6&amp;width=100%&amp;height=398&amp;lang=ru_RU&amp;scroll=true"></script> 
+                </div>
+                </section>
             <hr class="style-one">
             <section class="dressCode">
                 <div class="DCtext">
@@ -135,11 +136,21 @@
                 </div>
             <div class="formPresence">
             <form id="tg">
+            <!--
             <fieldset  class="presence">
                 <label for="client">Присутствие на мероприятии</label>
                 <input class="custom-radio" name="client1" type="checkbox" id="willBe" value="Буду" checked>
                 <label for="willBe">Я приду/Мы придем</label>
                 <input class="custom-radio" name="client2" type="checkbox" id="never" value="Отсутствует/не будет">
+                <label for="never">Прийти не получится</label>
+            </fieldset>-->
+            <fieldset class="presence">
+                <p>Присутствие на мероприятии</p>
+                
+                <input class="custom-radio" type="radio" name="presence" id="willBe" value="Буду" checked>
+                <label for="willBe">Я приду/Мы придем</label>
+                
+                <input class="custom-radio" type="radio" name="presence" id="never" value="Отсутствует/не будет">
                 <label for="never">Прийти не получится</label>
             </fieldset>
             <fieldset class="personal">            
@@ -157,7 +168,14 @@
                 <input type="checkbox" class="custom-checkbox" id="Krepkoe" name="Krepkoe" value="Крепкий алкоголь">
                 <label for="Krepkoe">Крепкий алкоголь</label>
                 <input type="checkbox" class="custom-checkbox" id="non_alko" name="non_alko" value="что-нибудь безалкогольное">
-                <label for="non-alko">Что-нибудь безалкогольное</label>
+                <label for="non_alko">Что-нибудь безалкогольное</label>
+            </fieldset>
+            <fieldset class="eat">
+                <input class="custom-radio" type="radio" name="eat" id="meat" value="Мясо" checked>
+                <label for="meat">Мясо</label>
+                
+                <input class="custom-radio" type="radio" name="eat" id="fish" value="Рыба">
+                <label for="fish">Рыба</label>
             </fieldset>
             <div>
                 <div id="success" class="alert alert-success" role="alert" style="display: none;"></div>
@@ -166,7 +184,8 @@
             </form>
             </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <!--<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>-->
+        <script src="js/telegram.js"></script>
         <script>
         const TOKEN = "7635892758:AAGmyC8pxU-Owrdl8LTnFBx3xmjTElX_fYk";
         const CHAT_ID = "-4907372889";
@@ -178,13 +197,13 @@
             let message = `<b> Заявка с сайта!</b>\n`;
             message += `<b>ФИО: </b> ${ this.name.value}\n`
             message += `<b>Присутствие: </b>` 
-            if(this.client1.checked == true){
-                message += this.client1.value + ` `;
-            }
-            if(this.client2.checked == true){
-                message += this.client2.value + ` `;
-            }
 
+            const presenceValue = this.elements['presence'].value;
+            message += `${presenceValue}\n`;
+
+            message += `\n<b>Еда: </b>`
+            const eatValue = this.elements['eat'].value;
+            message += `${eatValue}`;
             
             message += `\n<b>Алкоголь: </b>` 
             if(this.vino.checked == true){
@@ -202,6 +221,8 @@
             if(this.non_alko.checked == true){
                 message += this.non_alko.value + `, `;
             }
+            
+            
             
             axios.post(URI_API, {
                 chat_id: CHAT_ID,
